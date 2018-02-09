@@ -2,7 +2,7 @@
 #include "DFR_Key.h"
 
 static int DEFAULT_KEY_PIN = 0; 
-static int DEFAULT_THRESHOLD = 5;
+static int DEFAULT_THRESHOLD = 25;
 
 /*
 	To use any alternate set of values you will need to enable it by a define.
