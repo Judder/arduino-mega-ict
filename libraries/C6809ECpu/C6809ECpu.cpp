@@ -192,25 +192,11 @@ C6809ECpu::check(
     //
     //CHECK_BUS_VALUE_UINT8_EXIT(error, m_busD, s_D_iot, 0xFF);
 
-    // Loop to detect that reset clears
-    // On Star Wars this ~0x40000 (262,144) clocks.
-    // On exit the reset pin should be high (no reset).
-    //
-    {
-        for (UINT32 i = 0 ; i < 0x41000 ; i++)
-        {
-            int value = ::digitalRead(g_pinMap40DIL[s__RESET_i.pin]);
-
-            if (value == HIGH)
-            {
-                break;
-            }
-
-            m_pinClock.digitalWriteHIGH();
-            m_pinClock.digitalWriteLOW();
-        }
-    }
-    CHECK_VALUE_EXIT(error, g_pinMap40DIL, s__RESET_i, HIGH);
+    /*
+     * This is the point where it would potentially make sense to call a per-game specific routine, if defined,
+     * to initialise the watchdog as required by that game. For the moment these routines are in the Custom Functions
+     * for each game instead
+     */
 
     // Loop to detect E & Q by sampling and detecting both high and lows.
     {
@@ -518,6 +504,3 @@ C6809ECpu::clockPulse(
     m_pinClock.digitalWriteHIGH();
     m_pinClock.digitalWriteLOW();
 }
-
-
-

@@ -709,4 +709,49 @@ CStarWarsBaseGame::testCapture(
     return error;
 }
 
+//
+// External capture input on RESET pin 37.
+//
+static const CONNECTION s__RESET_i   = { 37, "_RESET" };
+
+PERROR
+    CStarWarsBaseGame::testWatchdog(
+        void   *context
+)
+{
+    CStarWarsBaseGame *thisGame = (CStarWarsBaseGame *) context;
+    C6809ECpu *cpu = (C6809ECpu *) thisGame->m_cpu;
+    PERROR error = errorCustom;
+    UINT32 clock = 0;
+
+    // Loop to detect that reset clears
+    // On Star Wars this ~0x40000 (262,144) clocks.
+    // On exit the reset pin should be high (no reset).
+    //
+    {
+        for (clock = 0; clock < 0x41000; clock++)
+        {
+            int value = ::digitalRead(g_pinMap40DIL[s__RESET_i.pin]);
+
+            if (value == HIGH)
+            {
+                break;
+            }
+
+            cpu->clockPulse();
+        }
+    }
+    if (clock < 0x40fff) {
+        errorCustom->code = ERROR_SUCCESS;
+        errorCustom->description = "OK: /RESET High";
+        error = errorCustom;
+    } else {
+        error = errorUnexpected;
+        goto Exit;
+    }
+
+Exit:
+    return error;
+}
+
 

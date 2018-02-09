@@ -124,6 +124,10 @@ class CStarWarsBaseGame : public CGame
             void   *context
         );
 
+        static PERROR testWatchdog(
+            void   *context
+        );
+
     protected:
 
         CStarWarsBaseGame(
